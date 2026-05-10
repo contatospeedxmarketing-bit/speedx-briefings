@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Briefings — SPEEDX MARKETING</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=DM+Mono:wght@400;500&display=swap');
+
+:root {
+  --black: #0C0C0E;
+  --white: #FAFAF8;
+  --surface: #F2F1EE;
+  --border: #E0DED9;
+  --muted: #8A8880;
+  --text: #1A1A1C;
+  --text2: #5C5B58;
+  --radius: 10px;
+  --rsm: 6px;
+  --coral: #D85A30;
+  --blue: #1A6DD4;
+  --green: #1A8A5C;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--white);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* HEADER */
+.hdr {
+  position: sticky; top: 0; z-index: 200;
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  padding: 0 28px;
+  height: 56px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.logo { font-size: 13px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
+.logo em { color: var(--coral); font-style: normal; }
+.hdr-right { display: flex; align-items: center; gap: 12px; }
+.hdr-tag { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); }
+.hdr-status { font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 20px; background: #EAF5F0; color: #1A8A5C; display: flex; align-items: center; gap: 5px; }
+.hdr-status::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #1A8A5C; }
+
+/* LAYOUT */
+.layout { display: grid; grid-template-columns: 210px 1fr; min-height: calc(100vh - 56px); }
+
+/* SIDEBAR */
+.sidebar {
+  border-right: 1px solid var(--border);
+  padding: 24px 16px;
+  position: sticky; top: 56px;
+  height: calc(100vh - 56px);
+  overflow-y: auto;
+}
+.sidebar-label { font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); padding: 0 8px; margin-bottom: 8px; }
+.nav-btn {
+  display: flex; align-items: center; gap: 10px;
+  width: 100%; padding: 9px 8px;
+  border: none; background: none;
+  border-radius: var(--rsm);
+  cursor: pointer; text-align: left;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px; color: var(--text2);
+  transition: all .15s;
+  margin-bottom: 2px;
+}
+.nav-btn:hover { background: var(--surface); color: var(--text); }
+.nav-btn.active { background: var(--black); color: var(--white); }
+.nav-btn.active .nav-dot { border-color: rgba(255,255,255,.3); }
+.nav-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; border: 1.5px solid transparent; }
+.nav-sla { font-family: 'DM Mono', monospace; font-size: 10px; margin-left: auto; opacity: .55; }
+.sidebar-sep { border-top: 1px solid var(--border); margin: 16px 0; }
+.sidebar-tip { font-size: 11px; color: var(--muted); padding: 0 8px; line-height: 1.7; }
+.sidebar-tip strong { color: var(--text2); font-weight: 500; }
+
+/* MAIN */
+.main { padding: 36px 44px; max-width: 720px; }
+
+/* FORM HEADER */
+.form-eyebrow {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 11px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase;
+  padding: 4px 10px; border-radius: 20px;
+  font-family: 'DM Mono', monospace;
+  margin-bottom: 10px;
+}
+.form-title { font-size: 24px; font-weight: 600; letter-spacing: -.02em; color: var(--black); margin-bottom: 5px; }
+.form-sub { font-size: 13px; color: var(--text2); margin-bottom: 24px; }
+
+/* SLA BAR */
+.sla-bar {
+  display: flex; gap: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--rsm);
+  overflow: hidden;
+  margin-bottom: 28px;
+}
+.sla-item { flex: 1; padding: 10px 14px; border-right: 1px solid var(--border); }
+.sla-item:last-child { border-right: none; }
+.sla-k { font-size: 10px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin-bottom: 3px; }
+.sla-v { font-size: 12px; font-weight: 500; color: var(--text); font-family: 'DM Mono', monospace; }
+
+/* SECTIONS */
+.section { margin-bottom: 28px; }
+.sec-title {
+  font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted);
+  padding-bottom: 8px; margin-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* FIELDS */
+.field { margin-bottom: 16px; }
+.field:last-child { margin-bottom: 0; }
+.f-label { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 4px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.tag { font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; padding: 2px 6px; border-radius: 4px; }
+.tag-r { background: #FEEDE6; color: var(--coral); }
+.tag-o { background: var(--surface); color: var(--muted); }
+.f-hint { font-size: 11px; color: var(--muted); margin-bottom: 5px; }
+
+input[type=text], input[type=url], textarea, select {
+  width: 100%;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px; color: var(--text);
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--rsm);
+  padding: 9px 12px;
+  outline: none; transition: border-color .15s; resize: vertical;
+}
+input[type=text]:focus, input[type=url]:focus, textarea:focus, select:focus { border-color: var(--black); }
+
+.opt-group { display: flex; flex-direction: column; gap: 5px; }
+.opt-item { display: flex; gap: 9px; align-items: flex-start; font-size: 13px; color: var(--text2); cursor: pointer; padding: 1px 0; }
+.opt-item input { margin-top: 2px; flex-shrink: 0; accent-color: var(--black); width: 14px; height: 14px; }
+
+/* WARN */
+.warn-box {
+  margin-top: 24px; padding: 12px 14px;
+  background: #FEF3EE; border: 1px solid #F5C4A8;
+  border-radius: var(--rsm);
+  font-size: 12px; color: #8A3515; line-height: 1.65;
+  display: flex; gap: 10px;
+}
+.warn-icon { flex-shrink: 0; }
+
+/* SUBMIT AREA */
+.submit-area {
+  margin-top: 28px; padding-top: 22px;
+  border-top: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: gap;
+  gap: 12px;
+}
+.submit-info { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; line-height: 1.6; }
+.btn-submit {
+  padding: 11px 28px;
+  background: var(--black); color: var(--white);
+  border: none; border-radius: var(--rsm);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px; font-weight: 500;
+  cursor: pointer; transition: opacity .15s;
+  white-space: nowrap;
+}
+.btn-submit:hover { opacity: .85; }
+.btn-submit:disabled { opacity: .4; cursor: not-allowed; }
+
+/* TOAST */
+.toast {
+  position: fixed; bottom: 28px; right: 28px; z-index: 999;
+  padding: 14px 20px; border-radius: var(--radius);
+  font-size: 13px; font-weight: 500;
+  box-shadow: 0 4px 24px rgba(0,0,0,.12);
+  display: flex; align-items: center; gap: 10px;
+  transform: translateY(80px); opacity: 0;
+  transition: all .3s cubic-bezier(.34,1.56,.64,1);
+  pointer-events: none;
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+.toast.success { background: #1A8A5C; color: white; }
+.toast.error { background: #C0392B; color: white; }
+
+/* LOADING OVERLAY */
+.loading-overlay {
+  display: none; position: fixed; inset: 0; z-index: 500;
+  background: rgba(250,250,248,.8); backdrop-filter: blur(3px);
+  align-items: center; justify-content: center; flex-direction: column; gap: 16px;
+}
+.loading-overlay.show { display: flex; }
+.spinner {
+  width: 36px; height: 36px;
+  border: 2.5px solid var(--border);
+  border-top-color: var(--black);
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-text { font-size: 13px; color: var(--text2); }
+</style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="spinner"></div>
+  <div class="loading-text" id="loadingText">Criando tarefa no ClickUp...</div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- HEADER -->
+<header class="hdr">
+  <div class="logo"><em>SPEED</em>X MARKETING</div>
+  <div class="hdr-right">
+    <div class="hdr-tag">briefings de produção</div>
+    <div class="hdr-status">ClickUp conectado</div>
+  </div>
+</header>
+
+<div class="layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-label">Serviços</div>
+    <button class="nav-btn active" onclick="selectForm('designer',this)">
+      <span class="nav-dot" style="background:#D85A30"></span> Designer <span class="nav-sla">3d</span>
+    </button>
+    <button class="nav-btn" onclick="selectForm('video',this)">
+      <span class="nav-dot" style="background:#D85A30"></span> Edição de vídeo <span class="nav-sla">4d</span>
+    </button>
+    <button class="nav-btn" onclick="selectForm('social',this)">
+      <span class="nav-dot" style="background:#1A8A5C"></span> Social Media <span class="nav-sla">3d</span>
+    </button>
+    <button class="nav-btn" onclick="selectForm('webdesign',this)">
+      <span class="nav-dot" style="background:#D85A30"></span> Webdesign <span class="nav-sla">7d</span>
+    </button>
+    <button class="nav-btn" onclick="selectForm('trafego',this)">
+      <span class="nav-dot" style="background:#1A6DD4"></span> Tráfego pago <span class="nav-sla">D+2</span>
+    </button>
+    <div class="sidebar-sep"></div>
+    <div class="sidebar-tip">
+      <strong>Como usar:</strong> Selecione o serviço, preencha todos os campos obrigatórios e clique em Enviar. A tarefa é criada no ClickUp automaticamente.
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main" id="mainContent"></main>
+</div>
+
+<script>
+// ─── CONFIG ───────────────────────────────────────────────
+const API_TOKEN = 'pk_176445823_LFSBELV89G4FUO3OC33P6UW3B2NG1HDB';
+const LISTS = {
+  designer:  '901327161689',
+  video:     '901327161691',
+  social:    '901327161693',
+  webdesign: '901327161696',
+  trafego:   '901327161698',
+};
+const ASSIGNEES = {
+  wini:   99932899,
+  iury:   87913030,
+  saymon: 118040993,
+  diniz:  118040991,
+};
+const LIST_ASSIGNEE = {
+  designer:  ASSIGNEES.wini,
+  video:     ASSIGNEES.iury,
+  social:    ASSIGNEES.saymon,
+  webdesign: ASSIGNEES.wini,
+  trafego:   ASSIGNEES.diniz,
+};
+const SLA_DAYS = { designer:3, video:4, social:3, webdesign:7, trafego:2 };
+
+// ─── FORM DEFINITIONS ─────────────────────────────────────
+const FORMS = {
+  designer: {
+    badge:'Designer · Wini', badgeColor:'#D85A30', badgeBg:'#FEEDE6',
+    title:'Briefing de Designer',
+    sub:'1 formulário por entregável · Preencha antes de acionar o Wini',
+    slas:[{k:'Prazo',v:'3 dias úteis'},{k:'Revisões',v:'1 rodada'},{k:'Responsável',v:'Wini'}],
+    warn:'Demandas sem briefing preenchido não serão aceitas. WhatsApp não substitui o briefing.',
+    sections:[
+      {t:'Identificação', f:[
+        {id:'cliente', l:'Cliente', r:1, type:'text', p:'Ex: Clínica Sorrir'},
+        {id:'solicitante', l:'Solicitante', r:1, type:'text', p:'Seu nome'},
+        {id:'prazo', l:'Prazo desejado', r:1, type:'text', p:'DD/MM/AAAA'},
+      ]},
+      {t:'O que produzir', f:[
+        {id:'tipo_peca', l:'Tipo de peça', r:1, type:'check', o:['Post feed (imagem estática)','Post carrossel','Story','Banner para site','Arte para anúncio','Logo / identidade visual','Outro']},
+        {id:'quantidade', l:'Quantidade', r:1, type:'text', p:'Ex: 3 posts + 2 stories'},
+        {id:'formato', l:'Formato / tamanho', r:1, type:'check', o:['1080×1080 (feed quadrado)','1080×1350 (feed retrato)','1080×1920 (story/reels)','1200×628 (anúncio Facebook)','Personalizado']},
+        {id:'formato_custom', l:'Formato personalizado', r:0, type:'text', p:'Ex: 800×600px, A4 vertical...'},
+      ]},
+      {t:'Direção criativa', f:[
+        {id:'angulo', l:'Ângulo da peça', r:1, type:'radio', o:['Dor (problema do cliente)','Desejo (transformação)','Prova social (resultado/depoimento)','Urgência / escassez','Institucional / branding']},
+        {id:'headline', l:'Texto principal (headline)', r:1, type:'text', p:'Ex: Chega de dor nas costas. Agende agora.'},
+        {id:'cta', l:'CTA / texto de apoio', r:0, type:'text', p:'Ex: Consulta por R$99 · Vagas limitadas'},
+        {id:'referencias', l:'Referências visuais (links)', r:0, type:'text', p:'https://'},
+        {id:'obs', l:'Observações', r:0, type:'area', p:'Cores específicas, elementos a evitar...'},
+      ]},
+      {t:'Arquivos', f:[
+        {id:'tem_arquivos', l:'Há arquivos para incluir?', r:0, type:'radio', o:['Sim — link no Drive abaixo','Não']},
+        {id:'drive_link', l:'Link do Google Drive', r:0, h:'Fotos, logo etc. Acesso deve estar liberado.', type:'url', p:'https://drive.google.com/...'},
+      ]},
+    ]
+  },
+
+  video: {
+    badge:'Edição de vídeo · Iury', badgeColor:'#D85A30', badgeBg:'#FEEDE6',
+    title:'Briefing de Edição de Vídeo',
+    sub:'1 formulário por vídeo · Arquivo bruto obrigatoriamente via Google Drive',
+    slas:[{k:'Prazo',v:'4 dias úteis'},{k:'Revisões',v:'1 rodada'},{k:'Responsável',v:'Iury'}],
+    warn:'Arquivo bruto por WhatsApp não será aceito. Suba no Google Drive e cole o link abaixo.',
+    sections:[
+      {t:'Identificação', f:[
+        {id:'cliente', l:'Cliente', r:1, type:'text', p:'Ex: Clínica Sorrir'},
+        {id:'solicitante', l:'Solicitante', r:1, type:'text', p:'Seu nome'},
+        {id:'prazo', l:'Prazo desejado', r:1, type:'text', p:'DD/MM/AAAA'},
+      ]},
+      {t:'Sobre o vídeo', f:[
+        {id:'tipo_video', l:'Tipo de vídeo', r:1, type:'radio', o:['Reels / TikTok (vertical)','Stories','Vídeo para anúncio','Institucional','Depoimento / prova social','Outro']},
+        {id:'duracao', l:'Duração final desejada', r:1, type:'radio', o:['Até 15 segundos','15 a 30 segundos','30 a 60 segundos','1 a 2 minutos','Mais de 2 minutos']},
+        {id:'formato_video', l:'Formato de entrega', r:1, type:'radio', o:['1080×1920 vertical (Reels/Stories)','1920×1080 horizontal','1080×1080 quadrado']},
+      ]},
+      {t:'Direção de edição', f:[
+        {id:'estilo', l:'Estilo de edição', r:1, type:'check', o:['Dinâmico (cortes rápidos)','Suave / institucional','Com legendas automáticas','Com motion / animação','Minimalista']},
+        {id:'trilha', l:'Trilha sonora', r:1, type:'radio', o:['Vou indicar o link abaixo','Usar a do arquivo bruto','Iury escolhe','Sem trilha']},
+        {id:'trilha_link', l:'Link da trilha', r:0, type:'url', p:'https://'},
+        {id:'mensagem', l:'Mensagem principal do vídeo', r:1, h:'O que deve comunicar? Que emoção gerar?', type:'area', p:'Ex: Mostrar transformação antes/depois. Tom inspiracional.'},
+        {id:'legendas', l:'Textos / legendas na tela', r:0, type:'area', p:'Ex: Destacar frase em amarelo. Legenda automática no rodapé.'},
+        {id:'obs', l:'Observações', r:0, type:'area', p:'Elementos a evitar, contexto do cliente...'},
+      ]},
+      {t:'Arquivo bruto', f:[
+        {id:'drive_link', l:'Link do Google Drive', r:1, h:'Acesso deve estar liberado para o Iury.', type:'url', p:'https://drive.google.com/...'},
+        {id:'descricao_arquivo', l:'Descrição do conteúdo gravado', r:1, type:'area', p:'Ex: 3 takes de depoimento + 5 clipes de b-roll. Melhor take é o segundo.'},
+      ]},
+    ]
+  },
+
+  social: {
+    badge:'Social Media · Saymon', badgeColor:'#1A8A5C', badgeBg:'#EAF5F0',
+    title:'Briefing de Social Media',
+    sub:'Uma solicitação por cliente por semana · Enviar toda segunda-feira',
+    slas:[{k:'Entrega',v:'3 dias antes'},{k:'Revisões',v:'1 rodada'},{k:'Responsável',v:'Saymon'}],
+    warn:'Publicação nunca é manual no dia. Conteúdo precisa estar aprovado com 3 dias de antecedência.',
+    sections:[
+      {t:'Identificação', f:[
+        {id:'cliente', l:'Cliente / @ do perfil', r:1, type:'text', p:'@nomecliente'},
+        {id:'solicitante', l:'Solicitante', r:1, type:'text', p:'Seu nome'},
+        {id:'semana', l:'Semana de publicação', r:1, type:'text', p:'Ex: 12/05 a 16/05'},
+      ]},
+      {t:'Volume de conteúdo', f:[
+        {id:'posts_feed', l:'Posts no feed', r:1, type:'radio', o:['3 posts','4 posts','5 posts','6 posts']},
+        {id:'stories', l:'Stories por dia', r:1, type:'radio', o:['1 story','2 stories','3 stories','Sem stories essa semana']},
+        {id:'reels', l:'Tem Reels?', r:1, type:'radio', o:['Sim — vídeo já aprovado','Sim — precisa criar roteiro','Não tem Reels essa semana']},
+      ]},
+      {t:'Pautas e direção criativa', f:[
+        {id:'pautas', l:'Temas / pautas da semana', r:1, h:'Liste cada assunto em ordem de prioridade', type:'area', p:'1. Dica\n2. Depoimento\n3. Oferta...'},
+        {id:'tom', l:'Tom de voz', r:1, type:'radio', o:['Educativo / informativo','Vendas / oferta direta','Emocional / inspiracional','Leve / bem-humor','Misto']},
+        {id:'angulos', l:'Ângulos a usar', r:1, type:'check', o:['Dor','Desejo / transformação','Prova social','Urgência / escassez','Autoridade / bastidores']},
+        {id:'cta', l:'CTA principal da semana', r:1, type:'text', p:'Ex: Agendar pelo link na bio'},
+        {id:'datas', l:'Post com data ou oferta específica?', r:0, type:'area', p:'Ex: Post de sexta com 20% off, publicar até quinta às 18h.'},
+        {id:'obs', l:'Observações', r:0, type:'area', p:'Temas a evitar, datas comemorativas, eventos do cliente...'},
+      ]},
+      {t:'Arquivos', f:[
+        {id:'tem_arquivos', l:'Há fotos / vídeos do cliente?', r:0, type:'radio', o:['Sim — link do Drive abaixo','Não — usar banco de imagens']},
+        {id:'drive_link', l:'Link do Google Drive', r:0, type:'url', p:'https://drive.google.com/...'},
+        {id:'referencias', l:'Referências de posts (links)', r:0, type:'url', p:'https://'},
+      ]},
+    ]
+  },
+
+  webdesign: {
+    badge:'Webdesign · Wini', badgeColor:'#D85A30', badgeBg:'#FEEDE6',
+    title:'Briefing de Webdesign',
+    sub:'Preencha antes de qualquer projeto de site ou landing page',
+    slas:[{k:'Landing page',v:'7 dias úteis'},{k:'Revisões',v:'1 rodada'},{k:'Responsável',v:'Wini'}],
+    warn:'Escopo fechado antes de começar. Funcionalidades fora do briefing aprovado geram aditivo de contrato.',
+    sections:[
+      {t:'Identificação', f:[
+        {id:'cliente', l:'Cliente', r:1, type:'text', p:'Nome da empresa'},
+        {id:'solicitante', l:'Solicitante', r:1, type:'text', p:'Seu nome'},
+        {id:'prazo', l:'Prazo desejado', r:1, type:'text', p:'DD/MM/AAAA'},
+      ]},
+      {t:'Tipo de projeto', f:[
+        {id:'tipo_projeto', l:'O que será desenvolvido?', r:1, type:'radio', o:['Landing page (captação de leads)','Site institucional','Página de vendas','Reformulação de site existente','E-commerce']},
+        {id:'objetivo', l:'Objetivo principal', r:1, type:'radio', o:['Captar leads (WhatsApp / formulário)','Gerar agendamentos','Vender diretamente','Apresentar a empresa']},
+        {id:'plataforma', l:'Plataforma', r:1, type:'radio', o:['Webflow','WordPress','Framer','HTML puro','Sem preferência — Wini decide']},
+        {id:'dominio', l:'Domínio já existe?', r:1, type:'radio', o:['Sim — vou passar o acesso','Não — precisa ser comprado','Não sei']},
+        {id:'hospedagem', l:'Hospedagem já existe?', r:1, type:'radio', o:['Sim — vou passar o acesso','Não — incluir na proposta','Não sei']},
+      ]},
+      {t:'Conteúdo e estrutura', f:[
+        {id:'secoes', l:'Seções necessárias', r:1, type:'check', o:['Hero (topo com CTA)','Sobre a empresa','Serviços / produtos','Depoimentos','FAQ','Formulário de contato','Mapa / localização','Vídeo']},
+        {id:'textos', l:'Textos prontos?', r:1, type:'radio', o:['Sim — link do Drive abaixo','Não — precisa de apoio','Parcialmente']},
+        {id:'imagens', l:'Imagens prontas?', r:1, type:'radio', o:['Sim — link do Drive abaixo','Não — usar banco de imagens','Parcialmente']},
+        {id:'drive_link', l:'Link do Drive com conteúdo', r:0, type:'url', p:'https://drive.google.com/...'},
+      ]},
+      {t:'Identidade visual', f:[
+        {id:'identidade', l:'Tem identidade visual?', r:1, type:'radio', o:['Sim — logo e cores definidas (Drive abaixo)','Sim — logo, sem manual','Não — Wini vai criar']},
+        {id:'cores', l:'Cores principais', r:0, type:'text', p:'Ex: Azul #0A2540 + Branco'},
+        {id:'referencias', l:'Sites de referência', r:0, type:'area', p:'Links de sites com o estilo que gosta'},
+        {id:'nao_quer', l:'O que NÃO quer no site', r:0, type:'area', p:'Ex: Sem cores vibrantes. Sem imagens genéricas.'},
+      ]},
+      {t:'Integrações', f:[
+        {id:'integracoes', l:'Integrações necessárias', r:0, type:'check', o:['WhatsApp direto','Pixel Meta','Google Analytics','Google Tag Manager','Formulário de captação','CRM','Nenhuma']},
+        {id:'obs_tec', l:'Observações técnicas', r:0, type:'area', p:'Qualquer detalhe técnico importante...'},
+      ]},
+    ]
+  },
+
+  trafego: {
+    badge:'Tráfego pago · Diniz', badgeColor:'#1A6DD4', badgeBg:'#EAF2FD',
+    title:'Briefing de Tráfego Pago',
+    sub:'Preencha no onboarding de cada novo cliente · Diniz responsável',
+    slas:[{k:'Campanhas',v:'D+2 após criativos'},{k:'Relatório',v:'Seg/Qua/Sex'},{k:'Responsável',v:'Diniz'}],
+    warn:'Nenhuma campanha sobe sem pixel testado, criativos aprovados e orçamento confirmado.',
+    sections:[
+      {t:'Identificação', f:[
+        {id:'cliente', l:'Cliente', r:1, type:'text', p:'Nome da empresa'},
+        {id:'orcamento', l:'Orçamento mensal de anúncios', r:1, type:'text', p:'Ex: R$ 3.000 / mês'},
+        {id:'data_inicio', l:'Data de início prevista', r:1, type:'text', p:'DD/MM/AAAA'},
+      ]},
+      {t:'Objetivo', f:[
+        {id:'objetivo', l:'Objetivo principal', r:1, type:'radio', o:['Leads via WhatsApp','Leads via formulário','Vendas diretas (landing page)','Vendas diretas (e-commerce)','Reconhecimento de marca']},
+        {id:'kpi', l:'Meta de resultado (KPI)', r:1, h:'Seja específico', type:'text', p:'Ex: CPL abaixo de R$15 · 50 leads/mês'},
+        {id:'historico', l:'Histórico de anúncios', r:1, type:'radio', o:['Nunca rodou','Rodou sem resultado','Rodou com resultado — detalhar abaixo','Não sabe']},
+        {id:'historico_detalhe', l:'Detalhe do histórico', r:0, type:'area', p:'O que foi testado? CPL médio? O que funcionou?'},
+      ]},
+      {t:'Acessos — checklist', f:[
+        {id:'acessos', l:'Acessos já liberados para o Diniz', r:1, type:'check', o:['Meta Business Manager','Conta de anúncio (Meta Ads)','Página do Facebook','Instagram','Pixel do Facebook','Google Ads','WhatsApp Business','Site / landing page']},
+        {id:'pixel_status', l:'Pixel instalado no site?', r:1, type:'radio', o:['Sim e testado','Sim mas não testado','Não — Diniz vai instalar','Não tem site']},
+        {id:'eventos', l:'Eventos do pixel configurados?', r:1, type:'radio', o:['Sim (Lead, Purchase...)','Não — Diniz vai configurar','Não sei']},
+      ]},
+      {t:'Público e produto', f:[
+        {id:'publico', l:'Público-alvo principal', r:1, h:'Idade, gênero, localização, interesses', type:'area', p:'Ex: Mulheres 30–50 anos, SP capital, interesse em saúde, renda média-alta'},
+        {id:'produto', l:'Produto / serviço anunciado', r:1, type:'text', p:'Ex: Consulta de fisioterapia · R$120 · Presencial'},
+        {id:'diferenciais', l:'Diferenciais da oferta', r:1, type:'area', p:'Por que o cliente deve escolher esse e não o concorrente?'},
+        {id:'funil', l:'Funil de conversão', r:1, type:'radio', o:['WhatsApp direto','Landing page → lead','Landing page → WhatsApp','E-commerce']},
+      ]},
+      {t:'Criativos', f:[
+        {id:'criativos_status', l:'Criativos aprovados disponíveis?', r:1, type:'radio', o:['Sim — link do Drive abaixo','Não — aguardando produção','Parcialmente']},
+        {id:'drive_link', l:'Link do Drive com criativos', r:0, type:'url', p:'https://drive.google.com/...'},
+        {id:'angulos', l:'Ângulos disponíveis', r:1, type:'check', o:['Dor','Desejo / transformação','Prova social','Urgência / escassez','Institucional']},
+        {id:'obs', l:'Observações', r:0, type:'area', p:'Restrições, segmento sensível (saúde, finanças)...'},
+      ]},
+    ]
+  },
+};
+
+// ─── STATE ────────────────────────────────────────────────
+let currentForm = 'designer';
+const formData = {};
+
+// ─── RENDER FORM ──────────────────────────────────────────
+function selectForm(key, btn) {
+  currentForm = key;
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderForm(key);
+}
+
+function renderForm(key) {
+  const f = FORMS[key];
+  let h = '';
+
+  h += `<div class="form-eyebrow" style="background:${f.badgeBg};color:${f.badgeColor}">${f.badge}</div>`;
+  h += `<h1 class="form-title">${f.title}</h1>`;
+  h += `<p class="form-sub">${f.sub}</p>`;
+
+  h += `<div class="sla-bar">`;
+  f.slas.forEach(s => h += `<div class="sla-item"><div class="sla-k">${s.k}</div><div class="sla-v">${s.v}</div></div>`);
+  h += `</div>`;
+
+  f.sections.forEach(sec => {
+    h += `<div class="section"><div class="sec-title">${sec.t}</div>`;
+    sec.f.forEach(field => {
+      const nm = `${key}_${field.id}`;
+      h += `<div class="field">`;
+      h += `<div class="f-label">${field.l} <span class="tag ${field.r ? 'tag-r' : 'tag-o'}">${field.r ? 'Obrigatório' : 'Opcional'}</span></div>`;
+      if (field.h) h += `<div class="f-hint">${field.h}</div>`;
+
+      if (field.type === 'text' || field.type === 'url') {
+        h += `<input type="${field.type === 'url' ? 'url' : 'text'}" id="${nm}" placeholder="${field.p || ''}">`;
+      } else if (field.type === 'area') {
+        h += `<textarea id="${nm}" rows="3" placeholder="${field.p || ''}"></textarea>`;
+      } else if (field.type === 'check') {
+        h += `<div class="opt-group">`;
+        field.o.forEach((o, i) => h += `<label class="opt-item"><input type="checkbox" name="${nm}" value="${o}" id="${nm}_${i}"> ${o}</label>`);
+        h += `</div>`;
+      } else if (field.type === 'radio') {
+        const rn = nm + '_r';
+        h += `<div class="opt-group">`;
+        field.o.forEach((o, i) => h += `<label class="opt-item"><input type="radio" name="${rn}" value="${o}" id="${nm}_${i}"> ${o}</label>`);
+        h += `</div>`;
+      }
+      h += `</div>`;
+    });
+    h += `</div>`;
+  });
+
+  h += `<div class="warn-box"><span class="warn-icon">⚠</span><span>${f.warn}</span></div>`;
+
+  h += `<div class="submit-area">
+    <div class="submit-info">
+      Ao enviar, a tarefa é criada no ClickUp<br>e atribuída automaticamente ao responsável.
+    </div>
+    <button class="btn-submit" onclick="submitForm('${key}')">Enviar para o ClickUp →</button>
+  </div>`;
+
+  document.getElementById('mainContent').innerHTML = h;
+}
+
+// ─── COLLECT DATA ─────────────────────────────────────────
+function collectForm(key) {
+  const f = FORMS[key];
+  const data = {};
+  let missing = [];
+
+  f.sections.forEach(sec => {
+    sec.f.forEach(field => {
+      const nm = `${key}_${field.id}`;
+      let val = '';
+
+      if (field.type === 'text' || field.type === 'url' || field.type === 'area') {
+        const el = document.getElementById(nm);
+        val = el ? el.value.trim() : '';
+      } else if (field.type === 'check') {
+        const checked = [...document.querySelectorAll(`input[name="${nm}"]:checked`)].map(el => el.value);
+        val = checked.join(', ');
+      } else if (field.type === 'radio') {
+        const checked = document.querySelector(`input[name="${nm}_r"]:checked`);
+        val = checked ? checked.value : '';
+      }
+
+      if (field.r && !val) missing.push(field.l);
+      data[field.l] = val || '—';
+    });
+  });
+
+  return { data, missing };
+}
+
+// ─── BUILD DESCRIPTION ────────────────────────────────────
+function buildDescription(key, data) {
+  const f = FORMS[key];
+  let desc = `📋 *Briefing de ${f.title}*\n`;
+  desc += `Criado via formulário SPEEDX · ${new Date().toLocaleDateString('pt-BR')}\n\n`;
+
+  f.sections.forEach(sec => {
+    desc += `---\n*${sec.t.toUpperCase()}*\n`;
+    sec.f.forEach(field => {
+      const val = data[field.l];
+      if (val && val !== '—') {
+        desc += `• *${field.l}:* ${val}\n`;
+      }
+    });
+    desc += '\n';
+  });
+
+  return desc;
+}
+
+// ─── CALCULATE DUE DATE ───────────────────────────────────
+function getDueDate(days) {
+  const d = new Date();
+  let added = 0;
+  while (added < days) {
+    d.setDate(d.getDate() + 1);
+    if (d.getDay() !== 0 && d.getDay() !== 6) added++;
+  }
+  return d.getTime();
+}
+
+// ─── SUBMIT ───────────────────────────────────────────────
+async function submitForm(key) {
+  const { data, missing } = collectForm(key);
+
+  if (missing.length > 0) {
+    showToast(`Preencha os campos obrigatórios: ${missing.slice(0,2).join(', ')}${missing.length > 2 ? '...' : ''}`, 'error');
+    return;
+  }
+
+  const f = FORMS[key];
+  const clientName = data['Cliente'] || data['Cliente / @ do perfil'] || 'Cliente';
+  const taskName = `[${f.badge.split('·')[0].trim()}] ${clientName} — ${new Date().toLocaleDateString('pt-BR')}`;
+
+  showLoading(true, 'Criando tarefa no ClickUp...');
+
+  try {
+    const body = {
+      name: taskName,
+      description: buildDescription(key, data),
+      assignees: [LIST_ASSIGNEE[key]],
+      due_date: getDueDate(SLA_DAYS[key]),
+      due_date_time: false,
+      priority: 2,
+      notify_all: true,
+    };
+
+    const res = await fetch(`https://api.clickup.com/api/v2/list/${LISTS[key]}/task`, {
+      method: 'POST',
+      headers: {
+        'Authorization': API_TOKEN,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    });
+
+    const result = await res.json();
+    showLoading(false);
+
+    if (res.ok && result.id) {
+      showToast(`✓ Tarefa criada com sucesso no ClickUp!`, 'success');
+      setTimeout(() => renderForm(key), 2000);
+    } else {
+      throw new Error(result.err || 'Erro desconhecido');
+    }
+  } catch (err) {
+    showLoading(false);
+    showToast(`Erro ao criar tarefa: ${err.message}`, 'error');
+  }
+}
+
+// ─── UI HELPERS ───────────────────────────────────────────
+function showLoading(show, text = '') {
+  const el = document.getElementById('loadingOverlay');
+  el.classList.toggle('show', show);
+  if (text) document.getElementById('loadingText').textContent = text;
+}
+
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast ${type} show`;
+  setTimeout(() => { t.classList.remove('show'); }, 4000);
+}
+
+// ─── INIT ─────────────────────────────────────────────────
+renderForm('designer');
+</script>
+</body>
+</html>

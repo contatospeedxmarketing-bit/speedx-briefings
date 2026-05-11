@@ -248,9 +248,11 @@ function rAcao(){
   h+=`<h1 class="pt">Central de Acoes</h1><p class="ps">Registre e acompanhe todas as acoes da operacao por cliente e responsavel.</p>`;
   h+=`<div class="tbs">`;
   h+=`<button class="tbb ${aT==='form'?'a':''}" onclick="aT='form';rAcao()"><svg class="ic"><path d="M12 5v14M5 12h14"/></svg> Nova acao</button>`;
+  h+=`<button class="tbb ${aT==='import'?'a':''}" onclick="aT='import';rAcao()"><svg class="ic"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M12 18v-6M9 15l3 3 3-3"/></svg> Importar PDF</button>`;
   h+=`<button class="tbb ${aT==='list'?'a':''}" onclick="aT='list';rAcao()"><svg class="ic"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg> Historico</button>`;
   h+=`</div>`;
   if(aT==='form') h+=acaoForm();
+  else if(aT==='import') h+=acaoImport();
   else h+=acaoList();
   document.getElementById('fc').innerHTML=h;
 }
@@ -318,6 +320,123 @@ function acaoList(){
   }
   h+=`</div>`;
   return h;
+}
+
+function acaoImport(){
+  let h=`<div class="sec"><div class="sect"><svg class="ic"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M12 18v-6M9 15l3 3 3-3"/></svg> Importar atualizacao de clientes</div>`;
+  h+=`<div class="fh" style="margin-bottom:14px">Cole o texto da sua atualizacao de clientes. A IA vai identificar todos os clientes e tarefas automaticamente e preparar para criacao no ClickUp.</div>`;
+  h+=`<div class="fld"><div class="fl">Texto da atualizacao <span class="tg tg-r">Obrigatorio</span></div><textarea id="imp_txt" rows="14" style="min-height:260px;line-height:1.7;font-family:var(--m);font-size:12px" placeholder="[NOME DO CLIENTE]\n- Tarefa 1\n- Tarefa 2\n\n[OUTRO CLIENTE]\n- Tarefa 1..."></textarea></div>`;
+  h+=`<div class="fld"><div class="fl">Responsavel padrao <span class="tg tg-r">Obrigatorio</span></div><div class="fh">Sera atribuido para tarefas sem responsavel especifico</div><select id="imp_resp"><option value="" disabled selected>Selecione</option>`;
+  MEMBROS.forEach(m=>h+=`<option value="${m.id}">${m.name}</option>`);
+  h+=`</select></div>`;
+  h+=`<div class="fld"><div class="fl">Prioridade padrao <span class="tg tg-r">Obrigatorio</span></div><div class="opts">`;
+  [{val:'urgent',label:'Urgente',color:'var(--red)'},{val:'high',label:'Alta',color:'var(--orange)'},{val:'normal',label:'Normal',color:'var(--gold)'},{val:'low',label:'Baixa',color:'var(--text2)'}].forEach(p=>h+=`<label class="opt"><input type="radio" name="imp_prio" value="${p.val}" ${p.val==='high'?'checked':''}> <span style="color:${p.color};font-weight:500">${p.label}</span></label>`);
+  h+=`</div></div></div>`;
+  h+=`<div class="ntc"><svg class="ic"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg><span>A IA vai ler o texto, identificar clientes e tarefas e montar uma lista para revisao antes de criar no ClickUp.</span></div>`;
+  h+=`<div class="ff"><div class="ffi">Analise por IA + criacao em lote.</div><button class="bp" onclick="processarImport()"><svg class="ic"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg> Analisar com IA</button></div>`;
+  h+=`<div class="cl" id="imp_load"><div class="sp"></div>Analisando o texto com IA...</div>`;
+  h+=`<div id="imp_preview"></div>`;
+  return h;
+}
+
+let importTasks=[];
+
+async function processarImport(){
+  const txt=document.getElementById('imp_txt')?.value?.trim();
+  const respId=document.getElementById('imp_resp')?.value;
+  const prio=(document.querySelector('input[name="imp_prio"]:checked')||{}).value||'high';
+  if(!txt){toast('Cole o texto da atualizacao','er');return;}
+  if(!respId){toast('Selecione o responsavel padrao','er');return;}
+  if(!getAIKey()){toast('Configure sua API Key em Configuracoes','er');return;}
+  document.getElementById('imp_load').classList.add('sh');
+  document.getElementById('imp_preview').innerHTML='';
+  try{
+    const d=await callAI(`Voce e um assistente operacional. Leia o texto abaixo e extraia TODOS os clientes e suas tarefas.\n\nResponda APENAS com JSON valido neste formato exato (sem markdown, sem explicacao):\n[\n  {"cliente":"NOME DO CLIENTE","tarefas":["tarefa 1","tarefa 2"]},\n  {"cliente":"OUTRO CLIENTE","tarefas":["tarefa 1"]}\n]\n\nTEXTO:\n${txt}`,2000);
+    const raw=d.content?.map(c=>c.text||'').join('')||'[]';
+    let parsed=[];
+    try{parsed=JSON.parse(raw.replace(/```json|```/g,'').trim());}catch(e){parsed=[];}
+    document.getElementById('imp_load').classList.remove('sh');
+    if(!parsed.length){toast('Nao foi possivel identificar tarefas. Verifique o formato do texto.','er');return;}
+    importTasks=[];
+    parsed.forEach(c=>c.tarefas.forEach(t=>importTasks.push({cliente:c.cliente,tarefa:t,respId,prio,selecionada:true})));
+    renderImportPreview(importTasks);
+  }catch(e){
+    document.getElementById('imp_load').classList.remove('sh');
+    toast('Erro: '+e.message,'er');
+  }
+}
+
+function renderImportPreview(tasks){
+  const total=tasks.filter(t=>t.selecionada).length;
+  let h=`<div class="sec" style="margin-top:24px"><div class="sect"><svg class="ic"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg> Tarefas identificadas — revise antes de criar</div>`;
+  h+=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">`;
+  h+=`<div style="font-size:11px;color:var(--text3);font-family:var(--m)" id="imp_count">${total} tarefa(s) selecionada(s)</div>`;
+  h+=`<div style="display:flex;gap:6px"><button class="bs" onclick="toggleAllTasks(true)" style="padding:6px 14px;font-size:11px">Selecionar todas</button><button class="bs" onclick="toggleAllTasks(false)" style="padding:6px 14px;font-size:11px">Desmarcar todas</button></div>`;
+  h+=`</div>`;
+  const clientes=[...new Set(tasks.map(t=>t.cliente))];
+  clientes.forEach(cli=>{
+    const cliTasks=tasks.filter(t=>t.cliente===cli);
+    h+=`<div style="margin-bottom:16px"><div style="font-size:11px;font-weight:600;color:var(--gold);text-transform:uppercase;letter-spacing:.08em;padding:6px 0;border-bottom:1px solid var(--border);margin-bottom:8px">${cli}</div>`;
+    cliTasks.forEach((t,gi)=>{
+      const gi2=tasks.indexOf(t);
+      h+=`<label class="opt" style="margin-bottom:2px"><input type="checkbox" id="itask_${gi2}" ${t.selecionada?'checked':''} onchange="toggleTask(${gi2})"> <span style="font-size:12px">${t.tarefa}</span></label>`;
+    });
+    h+=`</div>`;
+  });
+  h+=`</div>`;
+  h+=`<div class="ff"><div class="ffi">As tarefas serao criadas no ClickUp<br>na lista Acoes.</div><button class="bp" onclick="criarTasksEmLote()"><svg class="ic"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"/></svg> Criar no ClickUp</button></div>`;
+  h+=`<div id="imp_result"></div>`;
+  document.getElementById('imp_preview').innerHTML=h;
+}
+
+function toggleTask(i){
+  importTasks[i].selecionada=!importTasks[i].selecionada;
+  const total=importTasks.filter(t=>t.selecionada).length;
+  const el=document.getElementById('imp_count');
+  if(el)el.textContent=total+' tarefa(s) selecionada(s)';
+}
+
+function toggleAllTasks(sel){
+  importTasks.forEach((t,i)=>{t.selecionada=sel;const cb=document.getElementById('itask_'+i);if(cb)cb.checked=sel;});
+  const total=importTasks.filter(t=>t.selecionada).length;
+  const el=document.getElementById('imp_count');
+  if(el)el.textContent=total+' tarefa(s) selecionada(s)';
+}
+
+async function criarTasksEmLote(){
+  const selecionadas=importTasks.filter(t=>t.selecionada);
+  if(!selecionadas.length){toast('Selecione ao menos uma tarefa','er');return;}
+  loading(true,`Criando ${selecionadas.length} tarefas no ClickUp...`);
+  let ok=0,err=0;
+  const hoje=new Date().toLocaleDateString('pt-BR');
+  for(const t of selecionadas){
+    try{
+      const body={
+        name:`[${t.cliente}] ${t.tarefa}`,
+        description:`ACAO IMPORTADA\n\nCliente: ${t.cliente}\nTarefa: ${t.tarefa}\nData: ${hoje}`,
+        assignees:[parseInt(t.respId)],
+        priority:t.prio==='urgent'?1:t.prio==='high'?2:t.prio==='normal'?3:4,
+        notify_all:true
+      };
+      const r=await fetch('https://api.clickup.com/api/v2/list/'+ACOES_LIST+'/task',{
+        method:'POST',
+        headers:{'Authorization':'pk_176445823_LFSBELV89G4FUO3OC33P6UW3B2NG1HDB','Content-Type':'application/json'},
+        body:JSON.stringify(body)
+      });
+      const rs=await r.json();
+      if(r.ok&&rs.id){
+        addS('acoes',{cliente:t.cliente,tipo:'Importada',descricao:t.tarefa,responsavel:MEMBROS.find(m=>m.id==t.respId)?.name||'',prioridade:t.prio,data:hoje,obs:'',taskId:rs.id});
+        ok++;
+      }else err++;
+    }catch(e){err++;}
+  }
+  loading(false);
+  const res=document.getElementById('imp_result');
+  if(res){
+    res.innerHTML=`<div class="ntc" style="margin-top:16px;background:${ok>0?'var(--green-bg)':'var(--red-bg)'};border-color:${ok>0?'rgba(78,203,113,.2)':'rgba(226,85,85,.2)'}"><svg class="ic" style="color:${ok>0?'var(--green)':'var(--red)'}"><path d="M20 6L9 17l-5-5"/></svg><span style="color:${ok>0?'var(--green-l, var(--green))':'var(--red)'}"><strong>${ok} tarefa(s) criada(s) com sucesso</strong>${err>0?' — '+err+' com erro':''}</span></div>`;
+  }
+  if(ok>0)toast(ok+' tarefas criadas no ClickUp!','ok');
+  else toast('Erro ao criar tarefas','er');
 }
 
 async function subAcao(){

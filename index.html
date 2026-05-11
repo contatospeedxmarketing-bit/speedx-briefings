@@ -130,6 +130,7 @@ input[type=text],input[type=url],input[type=date],input[type=time],textarea,sele
 <button class="mtb" onclick="sel('calendar',this)">Agenda</button>
 <button class="mtb" onclick="sel('copy',this)">Copy</button>
 <button class="mtb" onclick="sel('strategy',this)">Estrategias</button>
+<button class="mtb" onclick="sel('acao',this)">Acoes</button>
 <button class="mtb" onclick="sel('config',this)">Config</button>
 </div>
 <div class="ly">
@@ -148,6 +149,7 @@ input[type=text],input[type=url],input[type=date],input[type=time],textarea,sele
 <span class="sbl">Ferramentas</span>
 <button class="sbb" onclick="sel('copy',this)"><svg class="ic"><path d="M12 20h9M16.5 3.5a2.12 2.12 0 013 3L7 19l-4 1 1-4z"/></svg>Gerador de Copy</button>
 <button class="sbb" onclick="sel('strategy',this)"><svg class="ic"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>Estrategias</button>
+<button class="sbb" onclick="sel('acao',this)"><svg class="ic"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>Acoes</button>
 <button class="sbb" onclick="sel('config',this)"><svg class="ic"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>Configuracoes</button>
 <div class="sbs"></div>
 <div style="font-size:10px;color:var(--text3);padding:0 14px;line-height:1.7">SPEEDX Marketing<br><span style="font-family:var(--m);font-size:9px">v3.0 — Sistema Operacional</span></div>
@@ -189,10 +191,10 @@ webdesign:{badge:'Web',bc:'var(--gold)',bb:'var(--gold-bg)',title:'Briefing Webd
 trafego:{badge:'Trafego',bc:'var(--blue)',bb:'var(--blue-bg)',title:'Briefing Trafego',sub:'Onboarding.',slas:[{k:'Campanhas',v:'D+2'},{k:'Report',v:'3x/sem'},{k:'Resp',v:'Diniz'}],warn:'Sem pixel = sem campanha.',sections:[{t:'Identificacao',f:[{id:'cliente',l:'Cliente',r:1,type:'text',p:'Nome'},{id:'orc',l:'Orcamento',r:1,type:'text',p:'R$ 3.000'},{id:'ini',l:'Inicio',r:1,type:'text',p:'DD/MM/AAAA'}]},{t:'Objetivo',f:[{id:'obj',l:'Objetivo',r:1,type:'radio',o:['Leads WA','Leads form','Vendas LP','E-comm','Branding']},{id:'kpi',l:'KPI',r:1,type:'text',p:'CPL < R$15'}]},{t:'Acessos',f:[{id:'acc',l:'Liberados',r:1,type:'check',o:['BM','Conta','FB','IG','Pixel','GAds','WA','Site']},{id:'px',l:'Pixel',r:1,type:'radio',o:['Testado','Nao testado','Nao','Sem site']}]},{t:'Publico',f:[{id:'pub',l:'Publico',r:1,type:'area',p:'Idade, local...'},{id:'prod',l:'Produto',r:1,type:'text',p:'Consulta R$120'},{id:'fun',l:'Funil',r:1,type:'radio',o:['WA direto','LP lead','LP WA','E-comm']}]},{t:'Criativos',f:[{id:'cr',l:'Prontos?',r:1,type:'radio',o:['Sim','Nao','Parcial']},{id:'drv',l:'Drive',r:0,type:'url',p:'https://drive.google.com/...'},{id:'ang',l:'Angulos',r:1,type:'check',o:['Dor','Desejo','Prova','Urgencia','Institucional']}]}]}
 };
 
-const ORD=['dash','designer','video','social','webdesign','trafego','daily','calendar','copy','strategy','config'];
+const ORD=['dash','designer','video','social','webdesign','trafego','daily','calendar','copy','strategy','acao','config'];
 let cur='dash',dT='form',cT='calendar',cM=new Date().getMonth(),cY=new Date().getFullYear(),sT='list';
 
-function sel(k,b){cur=k;document.querySelectorAll('.sbb,.mtb').forEach(x=>x.classList.remove('a'));b.classList.add('a');const i=ORD.indexOf(k);document.querySelectorAll('.sbb')[i]?.classList.add('a');document.querySelectorAll('.mtb')[i]?.classList.add('a');document.getElementById('ds').classList.remove('sh');if(k==='dash')rDash();else if(k==='daily'){dT='form';rDaily();}else if(k==='calendar'){cT='calendar';rCal();}else if(k==='copy')rCopy();else if(k==='strategy'){sT='list';rStrat();}else if(k==='config')rConfig();else rForm(k);}
+function sel(k,b){cur=k;document.querySelectorAll('.sbb,.mtb').forEach(x=>x.classList.remove('a'));b.classList.add('a');const i=ORD.indexOf(k);document.querySelectorAll('.sbb')[i]?.classList.add('a');document.querySelectorAll('.mtb')[i]?.classList.add('a');document.getElementById('ds').classList.remove('sh');if(k==='dash')rDash();else if(k==='daily'){dT='form';rDaily();}else if(k==='calendar'){cT='calendar';rCal();}else if(k==='copy')rCopy();else if(k==='strategy'){sT='list';rStrat();}else if(k==='config')rConfig();else if(k==='acao'){aT='form';rAcao();}else rForm(k);}
 
 // DASHBOARD
 function rDash(){const d=gs('daily'),m=gs('meetings'),s=gs('strategies');const td=new Date().toISOString().split('T')[0];const up=m.filter(x=>x.dateISO>=td).slice(0,5);const rd=d.slice(0,5);let h=`<div class="ey" style="background:var(--gold-bg);color:var(--gold);border:1px solid var(--gold-b)">Central de Comando</div><h1 class="pt">Dashboard</h1><p class="ps">Visao geral da operacao SPEEDX Marketing.</p>`;
@@ -221,6 +223,144 @@ function sDE(d){const ev=gs('meetings').filter(e=>e.dateISO===d);const el=docume
 
 // COPYWRITER
 function rCopy(){let h=`<div class="ey" style="background:var(--green-bg);color:var(--green);border:1px solid rgba(78,203,113,.18)">IA</div><h1 class="pt">Gerador de Copy</h1><p class="ps">Copys profissionais via IA.</p>`;h+=`<div class="sec"><div class="sect"><svg class="ic"><path d="M12 20h9M16.5 3.5a2.12 2.12 0 013 3L7 19l-4 1 1-4z"/></svg> Configuracao</div><div class="fld"><div class="fl">Cliente <span class="tg tg-r">Obr</span></div><input type="text" id="cp_c" placeholder="Cliente"></div><div class="fld"><div class="fl">Nicho <span class="tg tg-r">Obr</span></div><input type="text" id="cp_n" placeholder="Estetica, Restaurante..."></div><div class="fld"><div class="fl">Tipo <span class="tg tg-r">Obr</span></div><select id="cp_t"><option value="" disabled selected>Selecione</option><option>Legenda feed</option><option>Carrossel</option><option>Stories</option><option>Anuncio</option><option>Roteiro Reels</option><option>Bio</option></select></div><div class="fld"><div class="fl">Angulo <span class="tg tg-r">Obr</span></div><select id="cp_a"><option value="" disabled selected>Selecione</option><option>Dor</option><option>Desejo</option><option>Prova social</option><option>Urgencia</option><option>AIDA</option><option>PAS</option></select></div><div class="fld"><div class="fl">Tom <span class="tg tg-r">Obr</span></div><select id="cp_m"><option value="" disabled selected>Selecione</option><option>Profissional</option><option>Empatico</option><option>Urgente</option><option>Descontraido</option><option>Educativo</option></select></div><div class="fld"><div class="fl">Produto <span class="tg tg-r">Obr</span></div><input type="text" id="cp_p" placeholder="Limpeza de pele R$199"></div><div class="fld"><div class="fl">CTA <span class="tg tg-o">Opt</span></div><input type="text" id="cp_cta" placeholder="Link na bio"></div><div class="fld"><div class="fl">Extra <span class="tg tg-o">Opt</span></div><textarea id="cp_x" rows="3" placeholder="Promo, depoimento..."></textarea></div></div><div class="ff"><div class="ffi">IA gera em segundos.</div><button class="bp" onclick="gCopy()"><svg class="ic"><path d="M12 20h9M16.5 3.5a2.12 2.12 0 013 3L7 19l-4 1 1-4z"/></svg> Gerar</button></div><div class="cl" id="cpl"><div class="sp"></div>Gerando...</div><div class="co" id="cpo"></div><div class="ca" id="cpa"><button class="bs" onclick="navigator.clipboard.writeText(document.getElementById('cpo').textContent).then(()=>toast('Copiado!','ok'))"><svg class="ic"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copiar</button><button class="bs" onclick="gCopy()"><svg class="ic"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15"/></svg> Nova versao</button></div>`;document.getElementById('fc').innerHTML=h;}
+let aT='form';
+
+// === ACOES ===
+const ACOES_LIST='901327165948';
+const MEMBROS=[
+  {id:99932899,  name:'Wini'},
+  {id:87913030,  name:'Iury'},
+  {id:118040993, name:'Saymon'},
+  {id:118040991, name:'Diniz'},
+  {id:55180810,  name:'Jullianna'},
+  {id:118041014, name:'Richard'},
+  {id:176445823, name:'CEO / Speedx'}
+];
+const TIPOS_ACAO=[
+  'Criacao de conteudo','Edicao de video','Design de peca','Subir campanha',
+  'Otimizacao de trafego','Relatorio','Reuniao com cliente','Onboarding',
+  'Revisao de estrategia','Cobranca / Financeiro','Suporte ao cliente',
+  'Aprovacao de material','Entrega de projeto','Outro'
+];
+
+function rAcao(){
+  let h=`<div class="ey" style="background:rgba(226,85,85,.08);color:var(--red);border:1px solid rgba(226,85,85,.18)">Operacional</div>`;
+  h+=`<h1 class="pt">Central de Acoes</h1><p class="ps">Registre e acompanhe todas as acoes da operacao por cliente e responsavel.</p>`;
+  h+=`<div class="tbs">`;
+  h+=`<button class="tbb ${aT==='form'?'a':''}" onclick="aT='form';rAcao()"><svg class="ic"><path d="M12 5v14M5 12h14"/></svg> Nova acao</button>`;
+  h+=`<button class="tbb ${aT==='list'?'a':''}" onclick="aT='list';rAcao()"><svg class="ic"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg> Historico</button>`;
+  h+=`</div>`;
+  if(aT==='form') h+=acaoForm();
+  else h+=acaoList();
+  document.getElementById('fc').innerHTML=h;
+}
+
+function acaoForm(){
+  let h=`<div class="sec"><div class="sect"><svg class="ic"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg> Dados da acao</div>`;
+  
+  h+=`<div class="fld"><div class="fl">Cliente solicitante <span class="tg tg-r">Obrigatorio</span></div><input type="text" id="ac_cli" placeholder="Nome do cliente"></div>`;
+  
+  h+=`<div class="fld"><div class="fl">Tipo de acao <span class="tg tg-r">Obrigatorio</span></div><select id="ac_tipo"><option value="" disabled selected>Selecione o tipo</option>`;
+  TIPOS_ACAO.forEach(t=>h+=`<option value="${t}">${t}</option>`);
+  h+=`</select></div>`;
+  
+  h+=`<div class="fld"><div class="fl">Descricao da acao <span class="tg tg-r">Obrigatorio</span></div><textarea id="ac_desc" rows="4" placeholder="Descreva em detalhes o que precisa ser executado..."></textarea></div>`;
+  
+  h+=`<div class="fld"><div class="fl">Responsavel pela execucao <span class="tg tg-r">Obrigatorio</span></div><select id="ac_resp"><option value="" disabled selected>Selecione o responsavel</option>`;
+  MEMBROS.forEach(m=>h+=`<option value="${m.id}">${m.name}</option>`);
+  h+=`</select></div>`;
+  
+  h+=`<div class="fld"><div class="fl">Prioridade <span class="tg tg-r">Obrigatorio</span></div><div class="opts">`;
+  const prios=[
+    {val:'urgent',label:'Urgente',color:'var(--red)'},
+    {val:'high',  label:'Alta',   color:'var(--orange)'},
+    {val:'normal',label:'Normal', color:'var(--gold)'},
+    {val:'low',   label:'Baixa',  color:'var(--text2)'}
+  ];
+  prios.forEach(p=>h+=`<label class="opt"><input type="radio" name="ac_prio" value="${p.val}"> <span style="color:${p.color};font-weight:500">${p.label}</span></label>`);
+  h+=`</div></div>`;
+  
+  h+=`<div class="fld"><div class="fl">Data de execucao <span class="tg tg-r">Obrigatorio</span></div><input type="date" id="ac_data"></div>`;
+  
+  h+=`<div class="fld"><div class="fl">Observacoes adicionais <span class="tg tg-o">Opcional</span></div><textarea id="ac_obs" rows="3" placeholder="Contexto extra, links, referencias..."></textarea></div>`;
+  
+  h+=`</div>`;
+  h+=`<div class="ntc"><svg class="ic"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg><span>A acao sera criada no ClickUp e atribuida automaticamente ao responsavel selecionado.</span></div>`;
+  h+=`<div class="ff"><div class="ffi">Criado no ClickUp + historico interno.</div><button class="bp" onclick="subAcao()"><svg class="ic"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"/></svg> Registrar acao</button></div>`;
+  return h;
+}
+
+function acaoList(){
+  const acoes=gs('acoes');
+  const prioLabel={urgent:'Urgente',high:'Alta',normal:'Normal',low:'Baixa'};
+  const prioColor={urgent:'var(--red)',high:'var(--orange)',normal:'var(--gold)',low:'var(--text2)'};
+  let h=`<div class="hsc"><input type="text" id="acs" placeholder="Pesquisar por cliente, tipo ou responsavel..." oninput="flt('acs','acl')"></div>`;
+  h+=`<div class="hcn" id="aclc">${acoes.length} acao(oes)</div><div id="acl">`;
+  if(!acoes.length){
+    h+=`<div class="hem" style="padding:40px 20px">Nenhuma acao registrada ainda.</div>`;
+  } else {
+    acoes.forEach(a=>{
+      const pc=prioColor[a.prioridade]||'var(--text2)';
+      const pl=prioLabel[a.prioridade]||a.prioridade;
+      h+=`<div class="hc" data-s="${(a.cliente+' '+a.tipo+' '+a.responsavel+' '+a.data).toLowerCase()}">`;
+      h+=`<div class="ht"><div class="hd">${a.data}</div><div class="hbs">`;
+      h+=`<span class="hb hbc">${a.cliente}</span>`;
+      h+=`<span class="hb" style="background:rgba(91,163,245,.08);color:var(--blue);border:1px solid rgba(91,163,245,.15)">${a.tipo}</span>`;
+      h+=`<span class="hb" style="background:transparent;color:${pc};border:1px solid ${pc}44;font-weight:700">${pl}</span>`;
+      h+=`</div></div>`;
+      h+=`<div class="hby" style="white-space:normal;margin-top:4px">`;
+      h+=`<strong style="color:var(--text)">${a.descricao.length>100?a.descricao.substring(0,100)+'...':a.descricao}</strong>`;
+      h+=`<div style="margin-top:4px;font-size:11px;color:var(--text3)">Responsavel: <span style="color:var(--text2)">${a.responsavel}</span></div>`;
+      h+=`${a.obs?`<div style="margin-top:2px;font-size:11px;color:var(--text3)">${a.obs}</div>`:''}</div>`;
+      h+=`${a.taskId?`<div class="hid">ClickUp ID: ${a.taskId}</div>`:''}`;
+      h+=`</div>`;
+    });
+  }
+  h+=`</div>`;
+  return h;
+}
+
+async function subAcao(){
+  const cli=document.getElementById('ac_cli').value.trim();
+  const tipo=document.getElementById('ac_tipo').value;
+  const desc=document.getElementById('ac_desc').value.trim();
+  const respId=document.getElementById('ac_resp').value;
+  const prio=(document.querySelector('input[name="ac_prio"]:checked')||{}).value||'';
+  const data=document.getElementById('ac_data').value;
+  const obs=document.getElementById('ac_obs')?.value?.trim()||'';
+  
+  if(!cli||!tipo||!desc||!respId||!prio||!data){toast('Preencha todos os campos obrigatorios','er');return;}
+  
+  const respNome=MEMBROS.find(m=>m.id==respId)?.name||'';
+  const dataLabel=new Date(data+'T12:00:00').toLocaleDateString('pt-BR');
+  const prioLabel={urgent:'Urgente',high:'Alta',normal:'Normal',low:'Baixa'};
+  
+  loading(true,'Criando acao no ClickUp...');
+  try{
+    const descCompleta=`ACAO OPERACIONAL — SPEEDX\n\nCliente: ${cli}\nTipo: ${tipo}\nPrioridade: ${prioLabel[prio]}\nData de execucao: ${dataLabel}\nResponsavel: ${respNome}\n\nDescricao:\n${desc}${obs?'\n\nObservacoes:\n'+obs:''}`;
+    const body={
+      name:`[Acao] ${cli} — ${tipo} — ${dataLabel}`,
+      description:descCompleta,
+      assignees:[parseInt(respId)],
+      priority:prio==='urgent'?1:prio==='high'?2:prio==='normal'?3:4,
+      due_date:new Date(data+'T12:00:00').getTime(),
+      due_date_time:false,
+      notify_all:true
+    };
+    const r=await fetch('https://api.clickup.com/api/v2/list/'+ACOES_LIST+'/task',{
+      method:'POST',
+      headers:{'Authorization':'pk_176445823_LFSBELV89G4FUO3OC33P6UW3B2NG1HDB','Content-Type':'application/json'},
+      body:JSON.stringify(body)
+    });
+    const rs=await r.json();
+    loading(false);
+    if(r.ok&&rs.id){
+      addS('acoes',{cliente:cli,tipo,descricao:desc,responsavel:respNome,prioridade:prio,data:dataLabel,obs,taskId:rs.id,timestamp:Date.now()});
+      done('Acao registrada!',`${cli} — ${tipo} — ${respNome}`,rs.id);
+    } else throw new Error(rs.err||'Erro ao criar');
+  } catch(e){loading(false);toast('Erro: '+e.message,'er');}
+}
+
 function getAIKey(){return localStorage.getItem('sx_ai_key')||''}
 function setAIKey(k){localStorage.setItem('sx_ai_key',k)}
 async function callAI(prompt,maxTk){const key=getAIKey();const hdrs={'Content-Type':'application/json'};if(key){hdrs['x-api-key']=key;hdrs['anthropic-version']='2023-06-01';hdrs['anthropic-dangerous-direct-browser-access']='true';}const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:hdrs,body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:maxTk||1000,messages:[{role:'user',content:prompt}]})});if(!r.ok){const err=await r.json().catch(()=>({}));if(r.status===401||r.status===403){throw new Error('API Key invalida ou ausente. Configure em Configuracoes.');}throw new Error(err.error?.message||'Erro '+r.status);}return await r.json();}
@@ -293,7 +433,7 @@ async function subDaily(){const c=document.getElementById('d_c').value.trim(),s=
 async function subMeet(){const n=document.getElementById('c_n').value.trim(),c=document.getElementById('c_c').value.trim(),p=document.getElementById('c_p')?.value?.trim()||'',d=document.getElementById('c_d').value,hr=document.getElementById('c_h').value,lk=document.getElementById('c_l')?.value?.trim()||'',ob=document.getElementById('c_o')?.value?.trim()||'';if(!n||!c||!d||!hr){toast('Preencha nome, cliente, data e horario','er');return;}const dl=new Date(d+'T12:00:00').toLocaleDateString('pt-BR');loading(true,'Agendando...');try{const r=await fetch(`https://api.clickup.com/api/v2/list/${LS.calendar}/task`,{method:'POST',headers:{'Authorization':AK,'Content-Type':'application/json'},body:JSON.stringify({name:`[Reuniao] ${n} - ${c} - ${dl}`,description:`REUNIAO\n\n${n}\nCliente: ${c}\nData: ${dl} ${hr}\nParticipantes: ${p||'—'}\nLink: ${lk||'—'}\nObs: ${ob||'—'}`,assignees:[LA.calendar],priority:2,notify_all:true,due_date:new Date(d+'T'+hr).getTime(),due_date_time:true})});const rs=await r.json();loading(false);if(r.ok&&rs.id){addS('meetings',{nome:n,cliente:c,participantes:p,dateISO:d,horario:hr,link:lk,obs:ob,taskId:rs.id});done('Reuniao agendada',n+' - '+dl+' '+hr,rs.id);}else throw new Error(rs.err||'Erro');}catch(e){loading(false);toast('Erro: '+e.message,'er');}}
 
 function done(t,m,id){document.getElementById('fc').innerHTML='';document.getElementById('dt').textContent=t;document.getElementById('dm').textContent=m;document.getElementById('di').textContent='ID: '+id;document.getElementById('ds').classList.add('sh');}
-function rf(){document.getElementById('ds').classList.remove('sh');if(cur==='dash')rDash();else if(cur==='daily'){dT='form';rDaily();}else if(cur==='calendar'){cT='new';rCal();}else if(cur==='copy')rCopy();else if(cur==='strategy'){sT='list';rStrat();}else if(cur==='config')rConfig();else rForm(cur);}
+function rf(){document.getElementById('ds').classList.remove('sh');if(cur==='dash')rDash();else if(cur==='daily'){dT='form';rDaily();}else if(cur==='calendar'){cT='new';rCal();}else if(cur==='copy')rCopy();else if(cur==='strategy'){sT='list';rStrat();}else if(cur==='config')rConfig();else if(cur==='acao'){aT='form';rAcao();}else rForm(cur);}
 
 function rConfig(){let h=`<div class="ey" style="background:var(--bg4);color:var(--text2);border:1px solid var(--border2)">Sistema</div><h1 class="pt">Configuracoes</h1><p class="ps">Configure as integracoes do sistema SPEEDX.</p>`;
 h+=`<div class="sec"><div class="sect"><svg class="ic"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 11-7.778 7.778 5.5 5.5 0 017.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg> API Key — Anthropic (IA)</div>`;
